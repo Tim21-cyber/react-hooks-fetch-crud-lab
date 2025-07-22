@@ -19,13 +19,21 @@ function QuestionItem({ question, onDeleteQuestion, onUpdateQuestion }) {
 
   function handleChange(e) {
     const newCorrectIndex = parseInt(e.target.value);
+
+    // ✅ Optimistic update: update the UI immediately
+    onUpdateQuestion({ ...question, correctIndex: newCorrectIndex });
+
+    // ✅ Then sync with the server
     fetch(`http://localhost:4000/questions/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ correctIndex: newCorrectIndex }),
     })
       .then((res) => res.json())
-      .then((updatedQuestion) => onUpdateQuestion(updatedQuestion))
+      .then((updatedQuestion) => {
+        // In case the server returns something slightly different, sync again
+        onUpdateQuestion(updatedQuestion);
+      })
       .catch((err) => console.error(err));
   }
 

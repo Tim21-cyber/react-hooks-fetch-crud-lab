@@ -14,24 +14,25 @@ function App() {
       .catch((err) => console.error(err));
   }, []);
 
-
   function handleAddQuestion(newQuestion) {
-    setQuestions([...questions, newQuestion]);
+    setQuestions((prevQuestions) => [...prevQuestions, newQuestion]);
   }
-
 
   function handleDeleteQuestion(id) {
-    setQuestions(questions.filter((q) => q.id !== id));
+    setQuestions((prevQuestions) => prevQuestions.filter((q) => q.id !== id));
   }
 
-
   function handleUpdateQuestion(updatedQuestion) {
-    setQuestions(questions.map((q) => (q.id === updatedQuestion.id ? updatedQuestion : q)));
+    setQuestions((prevQuestions) =>
+      prevQuestions.map((q) =>
+        q.id === updatedQuestion.id ? updatedQuestion : q
+      )
+    );
   }
 
   return (
     <main>
-       <AdminNavBar onChangePage={setPage} />
+      <AdminNavBar onChangePage={setPage} />
       {page === "Form" ? (
         <QuestionForm onAddQuestion={handleAddQuestion} />
       ) : (
